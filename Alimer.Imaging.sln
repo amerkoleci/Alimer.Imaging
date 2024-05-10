@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{F08AB255-2739-45C6-B613-D2E489379DFB}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		Directory.Build.props = Directory.Build.props
+		Directory.Build.targets = Directory.Build.targets
+		Directory.Packages.props = Directory.Packages.props
+		global.json = global.json
+		LICENSE = LICENSE
+		NuGet.config = NuGet.config
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Imaging", "src\Alimer.Imaging\Alimer.Imaging.csproj", "{4565121E-AF10-4354-A2D9-2064F9B65A1E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4565121E-AF10-4354-A2D9-2064F9B65A1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4565121E-AF10-4354-A2D9-2064F9B65A1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4565121E-AF10-4354-A2D9-2064F9B65A1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4565121E-AF10-4354-A2D9-2064F9B65A1E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD4948E5-3254-442A-8EE0-55AF3BE4ED99}
+	EndGlobalSection
+EndGlobal
