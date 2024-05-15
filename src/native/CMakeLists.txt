@@ -106,6 +106,8 @@ set (TARGET_NAME alimer_image)
 add_library(${TARGET_NAME} ${ALIMER_LIBRARY_TYPE}
 	include/alimer_image.h
 	src/alimer_image.c
+	src/alimer_internal.h
+	src/alimer_third_party.cpp
 )
 
 target_compile_definitions (${TARGET_NAME} PRIVATE ALIMER_IMAGE_IMPLEMENTATION=1)
