@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
     <Description>Cross platform .NET imaging/textures library</Description>
     <PackageTags>standard game gamedev imaging textures</PackageTags>
     <PackageReadmeFile>README.md</PackageReadmeFile>
