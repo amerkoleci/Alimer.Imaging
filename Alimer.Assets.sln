@@ -17,7 +17,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".root", ".root", "{F08AB255
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Imaging", "src\Alimer.Imaging\Alimer.Imaging.csproj", "{4565121E-AF10-4354-A2D9-2064F9B65A1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Alimer.Assets", "src\Alimer.Assets\Alimer.Assets.csproj", "{4565121E-AF10-4354-A2D9-2064F9B65A1E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

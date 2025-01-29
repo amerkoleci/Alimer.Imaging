@@ -31,4 +31,4 @@ jobs:
         global-json-file: ./global.json
 
     - name: Pack
-      run: dotnet pack Alimer.Imaging.sln --configuration Release
+      run: dotnet pack Alimer.Assets.sln --configuration Release

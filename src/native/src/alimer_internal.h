@@ -4,6 +4,7 @@
 #ifndef _ALIMER_INTERNAL_H
 #define _ALIMER_INTERNAL_H
 
+#include "alimer_assets.h"
 #include <stdbool.h>
 #include <stdlib.h> // malloc, free
 #include <string.h> // memset
@@ -70,5 +71,13 @@
 #   include <assert.h>
 #   define ALIMER_ASSERT(c) assert(c)
 #endif
+
+_ALIMER_EXTERN void* alimerCalloc(size_t count, size_t size);
+_ALIMER_EXTERN void* alimerMalloc(size_t size);
+_ALIMER_EXTERN void* alimerRealloc(void* old, size_t size);
+_ALIMER_EXTERN void alimerFree(void* data);
+
+#define ALIMER_ALLOC(type)          ((type*)alimerCalloc(1, sizeof(type)))
+#define ALIMER_ALLOCN(type, n)      ((type*)alimerCalloc(n, sizeof(type)))
 
 #endif /* _ALIMER_INTERNAL_H */

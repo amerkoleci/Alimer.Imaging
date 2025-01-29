@@ -40,7 +40,7 @@ set(ALIMER_VERSION_PATCH 0)
 set(ALIMER_VERSION ${ALIMER_VERSION_MAJOR}.${ALIMER_VERSION_MINOR}.${ALIMER_VERSION_PATCH})
 
 # Project declaration
-project(alimer_imaging C)
+project(alimer_assets LANGUAGES CXX C)
 
 # Set the default CMAKE_BUILD_TYPE to Release.
 # This should be done before the project command since the latter can set
@@ -49,6 +49,9 @@ if (ALIMER_MASTER_PROJECT AND NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release" CACHE STRING "The default build type" FORCE)
     set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
 endif ()
+
+# CPM
+include(cmake/CPM.cmake)
 
 # Setting Platform
 if(EMSCRIPTEN)
@@ -93,26 +96,29 @@ else()
 endif ()
 
 if (ALIMER_SHARED_LIBRARY)
-    set(ALIMER_LIBRARY_TYPE SHARED)
+    set(LIBRARY_TYPE SHARED)
     message(STATUS "  Library         SHARED")
 else ()
-    set(ALIMER_LIBRARY_TYPE STATIC)
+    set(LIBRARY_TYPE STATIC)
     message(STATUS "  Library         STATIC")
 endif ()
 
 # Define target name
-set (TARGET_NAME alimer_image)
+set (TARGET_NAME alimer_assets)
 
-add_library(${TARGET_NAME} ${ALIMER_LIBRARY_TYPE}
-	include/alimer_image.h
-	src/alimer_image.c
-	src/alimer_internal.h
-	src/alimer_third_party.cpp
+set(SOURCE_FILES
+    include/alimer_assets.h
+    src/alimer_internal.h
+    src/alimer_internal.cpp
+    src/alimer_image.cpp
+    src/alimer_font.cpp
 )
 
-target_compile_definitions (${TARGET_NAME} PRIVATE ALIMER_IMAGE_IMPLEMENTATION=1)
+add_library(${TARGET_NAME} ${LIBRARY_TYPE} ${SOURCE_FILES})
+
+target_compile_definitions (${TARGET_NAME} PRIVATE ALIMER_IMPLEMENTATION=1)
 if (ALIMER_SHARED_LIBRARY)
-    target_compile_definitions (${TARGET_NAME} PRIVATE ALIMER_IMAGE_SHARED_LIBRARY=1)
+    target_compile_definitions (${TARGET_NAME} PRIVATE ALIMER_SHARED_LIBRARY=1)
 endif ()
 
 target_include_directories(${TARGET_NAME}

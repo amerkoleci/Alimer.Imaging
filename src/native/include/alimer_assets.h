@@ -1,46 +1,47 @@
 // Copyright (c) Amer Koleci and Contributors.
 // Licensed under the MIT License (MIT). See LICENSE in the repository root for more information.
 
-#ifndef _ALIMER_IMAGING_H
-#define _ALIMER_IMAGING_H
+#ifndef _ALIMER_ASSETS_H
+#define _ALIMER_ASSETS_H
 
-#if defined(ALIMER_IMAGE_SHARED_LIBRARY)
+#if defined(ALIMER_SHARED_LIBRARY)
 #    if defined(_WIN32)
-#        if defined(ALIMER_IMAGE_IMPLEMENTATION)
-#            define _ALIMER_IMAGE_EXPORT __declspec(dllexport)
+#        if defined(ALIMER_IMPLEMENTATION)
+#            define _ALIMER_EXPORT __declspec(dllexport)
 #        else
-#            define _ALIMER_IMAGE_EXPORT __declspec(dllimport)
+#            define _ALIMER_EXPORT __declspec(dllimport)
 #        endif
 #    else
-#        if defined(ALIMER_IMAGE_IMPLEMENTATION)
-#            define _ALIMER_IMAGE_EXPORT __attribute__((visibility("default")))
+#        if defined(ALIMER_IMPLEMENTATION)
+#            define _ALIMER_EXPORT __attribute__((visibility("default")))
 #        else
-#            define _ALIMER_IMAGE_EXPORT
+#            define _ALIMER_EXPORT
 #        endif
 #    endif
 #else
-#    define _ALIMER_IMAGE_EXPORT
+#    define _ALIMER_EXPORT
 #endif
 
 #ifdef __cplusplus
-#    define _ALIMER_IMAGE_EXTERN extern "C"
+#    define _ALIMER_EXTERN extern "C"
 #else
-#    define _ALIMER_IMAGE_EXTERN extern
+#    define _ALIMER_EXTERN extern
 #endif
 
-#define ALIMER_IMAGE_API _ALIMER_IMAGE_EXTERN _ALIMER_IMAGE_EXPORT 
+#define ALIMER_API _ALIMER_EXTERN _ALIMER_EXPORT 
 
 #ifdef _WIN32
-#   define ALIMER_IMAGE_CALL __cdecl
+#   define ALIMER_CALL __cdecl
 #else
-#   define ALIMER_IMAGE_CALL
+#   define ALIMER_CALL
 #endif
 
 #include <stddef.h>
 #include <stdint.h>
+#include <stdbool.h>
 
-typedef uint32_t Bool32;
-typedef struct alimerImage alimerImage;
+typedef struct Image Image;
+typedef struct Font Font;
 
 typedef enum PixelFormat {
 	PixelFormat_Undefined = 0,
@@ -194,62 +195,68 @@ typedef enum ImageDimension {
 	_ImageDimensiont_Force32 = 0x7FFFFFFF
 } ImageDimension;
 
-typedef struct PixelFormatInfo
-{
+typedef struct PixelFormatInfo {
 	PixelFormat format;
-	const char* name;
 	uint8_t bytesPerBlock;
 	uint8_t blockWidth;
 	uint8_t blockHeight;
 	PixelFormatKind kind;
 } PixelFormatInfo;
 
-ALIMER_IMAGE_API Bool32 GetPixelFormatInfo(PixelFormat format, PixelFormatInfo* info);
+ALIMER_API bool GetPixelFormatInfo(PixelFormat format, PixelFormatInfo* info);
 
 /// Get the number of bytes per format.
-ALIMER_IMAGE_API uint32_t GetFormatBytesPerBlock(PixelFormat format);
+ALIMER_API uint32_t GetFormatBytesPerBlock(PixelFormat format);
 
 /// Check if the format has a depth component
-ALIMER_IMAGE_API Bool32 IsDepthFormat(PixelFormat format);
+ALIMER_API bool IsDepthFormat(PixelFormat format);
 
 /// Check if the format has a stencil component
-ALIMER_IMAGE_API Bool32 IsStencilFormat(PixelFormat format);
+ALIMER_API bool IsStencilFormat(PixelFormat format);
 
 /// Check if the format has depth or stencil components
-ALIMER_IMAGE_API Bool32 IsDepthStencilFormat(PixelFormat format);
+ALIMER_API bool IsDepthStencilFormat(PixelFormat format);
 
 /// Check if the format has a depth only component.
-ALIMER_IMAGE_API Bool32 IsDepthOnlyFormat(PixelFormat format);
+ALIMER_API bool IsDepthOnlyFormat(PixelFormat format);
 
 /// Check if the format is a compressed format.
-ALIMER_IMAGE_API Bool32 IsCompressedFormat(PixelFormat format);
+ALIMER_API bool IsCompressedFormat(PixelFormat format);
 
 /// Check if the format is a BC-compressed format.
-ALIMER_IMAGE_API Bool32 IsBCCompressedFormat(PixelFormat format);
+ALIMER_API bool IsBCCompressedFormat(PixelFormat format);
 
 /// Check if the format is a ASTC-compressed format.
-ALIMER_IMAGE_API Bool32 IsASTCCompressedFormat(PixelFormat format);
+ALIMER_API bool IsASTCCompressedFormat(PixelFormat format);
 
 /// Get the pixel format kind
-ALIMER_IMAGE_API PixelFormatKind GetPixelFormatKind(PixelFormat format);
+ALIMER_API PixelFormatKind GetPixelFormatKind(PixelFormat format);
 
 /// Check if a format is an integer type.
-ALIMER_IMAGE_API Bool32 IsIntegerFormat(PixelFormat format);
+ALIMER_API bool IsIntegerFormat(PixelFormat format);
 
 /// Check if a format represents sRGB color space
-ALIMER_IMAGE_API Bool32 IsSrgbFormat(PixelFormat format);
+ALIMER_API bool IsSrgbFormat(PixelFormat format);
 
 /// Convert an SRGB format to linear. If the format is already linear, will return it
-ALIMER_IMAGE_API PixelFormat SrgbToLinearFormat(PixelFormat format);
+ALIMER_API PixelFormat SrgbToLinearFormat(PixelFormat format);
 
 /// Convert an linear format to sRGB. If the format doesn't have a matching sRGB format, will return the original
-ALIMER_IMAGE_API PixelFormat LinearToSrgbFormat(PixelFormat format);
+ALIMER_API PixelFormat LinearToSrgbFormat(PixelFormat format);
 
-/// Get format name
-ALIMER_IMAGE_API const char* ToString(PixelFormat format);
+/* Image */
+ALIMER_API Image* alimerImageCreate2D(PixelFormat format, uint32_t width, uint32_t height, uint32_t arrayLayers, uint32_t mipLevelCount);
+ALIMER_API Image* alimerImageCreateFromMemory(const void* pData, size_t dataSize);
+ALIMER_API void alimerImageDestroy(Image* image);
 
-ALIMER_IMAGE_API alimerImage* alimerImage_CreateFromMemory(const void* pData, size_t dataSize);
-ALIMER_IMAGE_API alimerImage* alimerImage_Create2D(PixelFormat format, uint32_t width, uint32_t height, uint32_t arrayLayers, uint32_t mipLevelCount);
-ALIMER_IMAGE_API void alimerImage_Destroy(alimerImage* image);
+/* Font */
+ALIMER_API Font* alimerFontCreateFromMemory(const uint8_t* data, size_t size);
+ALIMER_API void alimerFontDestroy(Font* font);
+ALIMER_API void alimerFontGetMetrics(Font* font, int* ascent, int* descent, int* linegap);
+ALIMER_API int alimerFontGetGlyphIndex(Font* font, int codepoint);
+ALIMER_API float alimerFontGetScale(Font* font, float size);
+ALIMER_API float alimerFontGetKerning(Font* font, int glyph1, int glyph2, float scale);
+ALIMER_API void alimerFontGetCharacter(Font* font, int glyph, float scale, int* width, int* height, float* advance, float* offsetX, float* offsetY, int* visible);
+ALIMER_API void alimerFontGetPixels(Font* font, uint8_t* dest, int glyph, int width, int height, float scale);
 
-#endif /* _ALIMER_IMAGING_H */
+#endif /* _ALIMER_ASSETS_H */
