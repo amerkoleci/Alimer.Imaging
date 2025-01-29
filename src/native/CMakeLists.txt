@@ -5,6 +5,12 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 	return()
 endif()
 
+# enable MSVC_RUNTIME_LIBRARY target property
+# see https://cmake.org/cmake/help/latest/policy/CMP0091.html
+if(POLICY CMP0091)
+    cmake_policy(SET CMP0091 NEW)
+endif()
+
 # Determine if engine is built as a subproject (using add_subdirectory)
 # or if it is the master project.
 if (NOT DEFINED ALIMER_MASTER_PROJECT)
@@ -13,6 +19,14 @@ if (NOT DEFINED ALIMER_MASTER_PROJECT)
         set(ALIMER_MASTER_PROJECT ON)
         message(STATUS "CMake version: ${CMAKE_VERSION}")
     endif ()
+endif ()
+
+# Set the default CMAKE_BUILD_TYPE to Release.
+# This should be done before the project command since the latter can set
+# CMAKE_BUILD_TYPE itself (it does so for nmake).
+if (ALIMER_MASTER_PROJECT AND NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "The default build type" FORCE)
+    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
 endif ()
 
 # Use solution folders to organize projects
@@ -42,49 +56,13 @@ set(ALIMER_VERSION ${ALIMER_VERSION_MAJOR}.${ALIMER_VERSION_MINOR}.${ALIMER_VERS
 # Project declaration
 project(alimer_assets LANGUAGES CXX C)
 
-# Set the default CMAKE_BUILD_TYPE to Release.
-# This should be done before the project command since the latter can set
-# CMAKE_BUILD_TYPE itself (it does so for nmake).
-if (ALIMER_MASTER_PROJECT AND NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "The default build type" FORCE)
-    set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS ${CMAKE_CONFIGURATION_TYPES})
-endif ()
+if (ALIMER_MASTER_PROJECT AND NOT DEFINED CMAKE_MSVC_RUNTIME_LIBRARY)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY MultiThreaded$<$<CONFIG:Debug>:Debug>)
+endif()
 
 # CPM
 include(cmake/CPM.cmake)
-
-# Setting Platform
-if(EMSCRIPTEN)
-    set(ALIMER_PLATFORM_NAME "Web")
-elseif(ANDROID)
-    set(ALIMER_PLATFORM_NAME "Android")
-elseif(IOS)
-    set(ALIMER_PLATFORM_NAME "iOS")
-elseif(APPLE)
-    set(ALIMER_PLATFORM_NAME "macOS")
-elseif(WINDOWS_STORE)
-    set(ALIMER_PLATFORM_NAME "UWP")
-elseif(WIN32)
-    set(ALIMER_PLATFORM_NAME "Win32")
-elseif(UNIX)
-    set(ALIMER_PLATFORM_NAME "Unix")
-    set(ALIMER_LINUX_WSI_SELECTION "XCB" CACHE STRING "Select WSI target (XCB, XLIB, WAYLAND, D2D)")
-else()
-    message(FATAL_ERROR "Unrecognized platform: ${CMAKE_SYSTEM_NAME}")
-endif()
-
-# Setting Architecture
-if (DEFINED VCPKG_TARGET_ARCHITECTURE)
-    set(ALIMER_ARCH ${VCPKG_TARGET_ARCHITECTURE})
-elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Ww][Ii][Nn]32$")
-    set(ALIMER_ARCH x86)
-elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Xx]64$")
-    set(ALIMER_ARCH x64)
-elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]$")
-    set(ALIMER_ARCH arm)
-elseif(CMAKE_GENERATOR_PLATFORM MATCHES "^[Aa][Rr][Mm]64$")
-    set(ALIMER_ARCH arm64)
-endif()
+include(cmake/alimer.cmake)
 
 # Options
 if (IOS OR EMSCRIPTEN)
